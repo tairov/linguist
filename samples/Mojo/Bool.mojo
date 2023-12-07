@@ -19,13 +19,21 @@ struct OurBool:
         return self.value
 
     fn __eq__(self, rhs: OurBool) -> Self:
-        let lhsIndex = __mlir_op.`index.casts`[_type : __mlir_type.index](self.value)
-        let rhsIndex = __mlir_op.`index.casts`[_type : __mlir_type.index](rhs.value)
+        let lhsIndex = __mlir_op.`index.casts`[_type=__mlir_type.index](self.value)
+        let rhsIndex = __mlir_op.`index.casts`[_type=__mlir_type.index](rhs.value)
         return Self(
-            __mlir_op.`index.cmp`[pred : __mlir_attr.`#index<cmp_predicate eq>`](
+            __mlir_op.`index.cmp`[pred=__mlir_attr.`#index<cmp_predicate eq>`](
                 lhsIndex, rhsIndex
             )
         )
 
     fn __invert__(self) -> Self:
         return OurFalse if self == OurTrue else OurTrue
+
+    fn __str__(self) -> String:
+        return "true" if self == OurTrue else "false"
+
+fn main():
+    let x: OurBool = OurBool(__mlir_attr.`true`)
+    let y: OurBool = OurBool(__mlir_attr.`false`)
+    print(x.__str__(), y.__str__())
